@@ -121,13 +121,9 @@ export default function SupportScreen() {
           <h2 className="text-2xl font-display font-extrabold text-gold-gradient tracking-tight">
             {t.supportHeader}
           </h2>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-500 font-medium">
             {t.supportDesc}
           </p>
-        </div>
-        <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full text-emerald-400 text-xs font-semibold">
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>{t.supportDuty}</span>
         </div>
       </div>
 
@@ -142,17 +138,17 @@ export default function SupportScreen() {
               AX
             </div>
             <div className="flex flex-col">
-              <h3 className="font-display font-bold text-xl text-gray-100">
+              <h3 className="font-display font-bold text-xl text-gray-900">
                 {supportDetails.manager}
               </h3>
-              <span className="text-xs text-brand-blue font-semibold uppercase tracking-wider">
+              <span className="text-xs text-brand-blue font-bold uppercase tracking-wider">
                 {supportDetails.role}
               </span>
               <div className="flex flex-wrap gap-1.5 mt-2">
                 {supportDetails.languages.map((lang, idx) => (
                   <span
                     key={idx}
-                    className="text-[9px] text-gray-400 bg-white/5 px-2 py-0.5 rounded border border-white/5"
+                    className="text-[9px] text-gray-600 bg-white/10 px-2 py-0.5 rounded border border-gray-300 font-medium"
                   >
                     {lang === "Thai" && language === "th" ? "ภาษาไทย" :
                      lang === "Thai" && language === "zh" ? "泰语" :
@@ -166,35 +162,35 @@ export default function SupportScreen() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3.5 border-t border-white/5 pt-5">
+          <div className="flex flex-col gap-3.5 border-t border-white/10 pt-5">
             {/* Phone contact */}
             <a
               href={`tel:${supportDetails.phone.replace(/[^+\d]/g, "")}`}
-              className="flex items-center gap-3.5 p-3 rounded-lg bg-brand-bg-primary/50 hover:bg-brand-bg-secondary/50 border border-white/5 hover:border-brand-gold/30 transition-all duration-300 group"
+              className="flex items-center gap-3.5 p-3 rounded-lg bg-brand-bg-primary/50 hover:bg-brand-bg-secondary/50 border border-white/10 hover:border-brand-gold/30 transition-all duration-300 group"
             >
               <div className="p-2 rounded bg-brand-gold/10 text-brand-gold group-hover:scale-110 transition-transform">
                 <Phone className="w-5 h-5" />
               </div>
               <div className="flex flex-col text-xs">
-                <span className="text-gray-500 font-semibold uppercase text-[9px] tracking-wider">
+                <span className="text-gray-500 font-bold uppercase text-[9px] tracking-wider">
                   {t.supportCall}
                 </span>
-                <span className="font-bold text-gray-200 group-hover:text-brand-gold transition-colors">
+                <span className="font-bold text-gray-800 group-hover:text-brand-gold transition-colors">
                   {supportDetails.phone}
                 </span>
               </div>
             </a>
 
             {/* WeChat contact */}
-            <div className="flex items-center gap-3.5 p-3 rounded-lg bg-brand-bg-primary/50 border border-white/5">
+            <div className="flex items-center gap-3.5 p-3 rounded-lg bg-brand-bg-primary/50 border border-white/10">
               <div className="p-2 rounded bg-brand-blue/10 text-brand-blue">
                 <MessageSquare className="w-5 h-5" />
               </div>
               <div className="flex flex-col text-xs">
-                <span className="text-gray-500 font-semibold uppercase text-[9px] tracking-wider">
+                <span className="text-gray-500 font-bold uppercase text-[9px] tracking-wider">
                   {t.supportWechat}
                 </span>
-                <span className="font-bold text-gray-200">
+                <span className="font-bold text-gray-800">
                   {supportDetails.wechat}
                 </span>
               </div>
@@ -203,16 +199,16 @@ export default function SupportScreen() {
             {/* Email contact */}
             <a
               href={`mailto:${supportDetails.email}`}
-              className="flex items-center gap-3.5 p-3 rounded-lg bg-brand-bg-primary/50 hover:bg-brand-bg-secondary/50 border border-white/5 hover:border-brand-blue/30 transition-all duration-300 group"
+              className="flex items-center gap-3.5 p-3 rounded-lg bg-brand-bg-primary/50 hover:bg-brand-bg-secondary/50 border border-white/10 hover:border-brand-blue/30 transition-all duration-300 group"
             >
               <div className="p-2 rounded bg-brand-blue/10 text-brand-blue group-hover:scale-110 transition-transform">
                 <Mail className="w-5 h-5" />
               </div>
               <div className="flex flex-col text-xs">
-                <span className="text-gray-500 font-semibold uppercase text-[9px] tracking-wider">
+                <span className="text-gray-500 font-bold uppercase text-[9px] tracking-wider">
                   {t.supportEmail}
                 </span>
-                <span className="font-bold text-gray-200 group-hover:text-brand-blue transition-colors">
+                <span className="font-bold text-gray-800 group-hover:text-brand-blue transition-colors">
                   {supportDetails.email}
                 </span>
               </div>
@@ -222,7 +218,7 @@ export default function SupportScreen() {
 
         {/* FAQ / Emergency details (Right) */}
         <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col gap-4">
+          <div className="glass-panel p-6 rounded-2xl border border-white/10 flex flex-col gap-4">
             <h4 className="font-display font-bold text-base text-brand-gold flex items-center gap-2 border-b border-white/10 pb-3">
               <Headphones className="w-5 h-5 text-brand-gold" />
               {t.supportLiaison}
@@ -232,15 +228,15 @@ export default function SupportScreen() {
               <div className="flex gap-3">
                 <MapPin className="w-4 h-4 text-brand-blue flex-shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-0.5">
-                  <span className="font-bold text-gray-200">
-                    {language === "th" ? "เปิดใช้งานระบบสื่อสารผ่านดาวเทียม" : language === "zh" ? "北斗卫星接收终端已激活" : "Satellite Link Active"}
+                  <span className="font-bold text-gray-900">
+                    {language === "th" ? "คำแนะนำการปรับตัวบนที่ราบสูง" : language === "zh" ? "高海拔适应指南" : "Altitude Acclimatization Tips"}
                   </span>
-                  <span className="text-gray-400 font-light leading-normal">
+                  <span className="text-gray-700 font-medium leading-normal">
                     {language === "th"
-                      ? "ในเส้นทางข้ามช่องเขาที่สูง สัญญาณมือถือหลักอาจดับ ทีมนำเที่ยวมีระบบวิทยุดาวเทียม Beidou ที่ใช้งานได้ตลอดเวลา"
+                      ? "โปรดหลีกเลี่ยงการออกกำลังกายหักโหม คอยจิบน้ำอุ่นบ่อยๆ สวมหมวกกันลมเพื่อรักษาความอบอุ่นของศีรษะ และนำกระป๋องออกซิเจนพกพาติดตัวไว้"
                       : language === "zh"
-                      ? "帕米尔高海拔段部分基站信号偏弱，车队配有全天候北斗应急通信，确保无盲区覆盖。"
-                      : "In Pamir high passes, mobile network can drop. The crew carries active Beidou Satellite messengers."}
+                      ? "避免剧烈运动，勤喝温水，佩戴防风帽以保持头部温暖，并随身携带便携式氧气瓶。"
+                      : "Avoid strenuous exercise, sip warm water frequently, wear a windproof beanie to keep your head warm, and carry portable oxygen canisters."}
                   </span>
                 </div>
               </div>
@@ -248,118 +244,110 @@ export default function SupportScreen() {
               <div className="flex gap-3">
                 <Globe className="w-4 h-4 text-brand-gold flex-shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-0.5">
-                  <span className="font-bold text-gray-200">
-                    {language === "th" ? "บริการตรวจสอบข้อมูลผ่านทางหลวง VIP" : language === "zh" ? "边防检查VIP通道对接" : "VIP Local Logistics"}
+                  <span className="font-bold text-gray-900">
+                    {language === "th" ? "การจัดเก็บและดูแลรักษาหนังสือเดินทาง" : language === "zh" ? "护照与出入境文件管理" : "Passport & Document Safety"}
                   </span>
-                  <span className="text-gray-400 font-light leading-normal">
+                  <span className="text-gray-700 font-medium leading-normal">
                     {language === "th"
-                      ? "ไกด์ส่วนตัวจะอำนวยความสะดวกในการตรวจหนังสือเดินทางและใบอนุญาตเดินทางสำหรับทางหลวงปามีร์และจุดตรวจทุกแห่ง"
+                      ? "เก็บหนังสือเดินทางและเอกสารสำคัญในกระเป๋าติดตัวตลอดเวลา ถ่ายภาพเอกสารเก็บไว้ในโทรศัพท์ หรือสำรองเอกสารกระดาษแยกไว้เพื่อความปลอดภัย"
                       : language === "zh"
-                      ? "沿线检查站与边防通道均有专属地接协调核验，全力保障快速通关通行。"
-                      : "Your guide will assist with passport verification at all regional stops and highway checkpoints."}
+                      ? "请将护照及随身重要文件存放在随身包中。在手机内保留电子版照片，或准备纸质复印件以备不时之需。"
+                      : "Keep your passport and vital travel documents in a secure body bag. Keep photos of your documents on your phone or carry printed copies separately."}
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Quick Language Translator Card */}
-          <div className="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col gap-4">
-            <h4 className="font-display font-bold text-base text-brand-gold flex items-center gap-2 border-b border-white/10 pb-3">
-              <Languages className="w-5 h-5 text-brand-gold" />
-              <span>{language === "th" ? "พจนานุกรมแปลภาษาด่วน (Xinjiang Translator)" : language === "zh" ? "极速语言翻译助手" : "Quick Language Translator"}</span>
+          {/* Thai Embassy & Emergency Contacts Card */}
+          <div className="glass-panel-blue bg-brand-bg-secondary/40 p-6 rounded-2xl border border-brand-blue/15 flex flex-col gap-4 shadow-md">
+            <h4 className="font-display font-bold text-base text-brand-blue flex items-center gap-2 border-b border-brand-blue/10 pb-3">
+              <ShieldCheck className="w-5 h-5 text-brand-blue" />
+              <span>{language === "th" ? "ช่วยเหลือคนไทยในจีน" : language === "zh" ? "泰籍公民紧急保障" : "Thai Emergency Services"}</span>
             </h4>
+            <div className="space-y-3.5 text-xs">
+              <p className="text-[10px] text-gray-500 font-light leading-relaxed">
+                {language === "th" 
+                  ? "มณฑลซินเจียงอยู่ภายใต้ความดูแลโดยตรงของสถานเอกอัครราชทูต ณ กรุงปักกิ่ง หากเกิดกรณีฉุกเฉินเร่งด่วน เช่น หนังสือเดินทางสูญหาย หรืออุบัติเหตุ สามารถติดต่อหน่วยงานด้านล่างได้ทันที"
+                  : language === "zh"
+                  ? "新疆维吾尔自治区属于泰国驻华大使馆（北京）直接管辖。如遇紧急情况（护照遗失、人身安全等），请立即联系以下官方机构。"
+                  : "Xinjiang is under the direct jurisdiction of the Royal Thai Embassy in Beijing. For urgent emergencies (lost passport, accidents, distress), please contact the agencies below."}
+              </p>
+              
+              {/* Embassy Hotline */}
+              <a
+                href="tel:+8615727312531"
+                className="flex items-center gap-3 p-2.5 rounded-lg bg-brand-bg-primary/50 hover:bg-brand-bg-secondary/60 border border-brand-blue/15 hover:border-brand-blue transition-all duration-300 group"
+              >
+                <div className="p-2 rounded bg-brand-blue/10 text-brand-blue group-hover:scale-105 transition-transform flex-shrink-0">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[8px] text-gray-500 font-bold uppercase tracking-wider">
+                    {language === "th" ? "สายด่วนฉุกเฉินคนไทยในจีน (24 ชม.)" : language === "zh" ? "泰籍公民24小时紧急热线" : "24/7 Thai Citizens Emergency Hotline"}
+                  </span>
+                  <span className="font-bold text-gray-800 transition-colors">
+                    +86 157-2731-2531
+                  </span>
+                </div>
+              </a>
 
-            {/* Phrase search bar */}
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={language === "th" ? "ค้นหาวลีแปล... (ไทย, จีน, อุยกูร์)" : language === "zh" ? "搜中/维/泰文短语..." : "Search phrases... (TH, CN, UY)"}
-                className="w-full bg-brand-bg-primary/50 border border-white/10 rounded-lg text-xs py-2 pl-9 pr-8 text-white focus:outline-none focus:border-brand-gold/40"
-              />
-              <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-gray-500" />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-2 text-[10px] text-gray-400 hover:text-gray-200 cursor-pointer py-1"
-                >
-                  Clear
-                </button>
-              )}
+              {/* Embassy Consular Office */}
+              <a
+                href="tel:+861085318767"
+                className="flex items-center gap-3 p-2.5 rounded-lg bg-brand-bg-primary/50 hover:bg-brand-bg-secondary/60 border border-white/10 hover:border-brand-blue transition-all duration-300 group"
+              >
+                <div className="p-2 rounded bg-brand-blue/5 text-brand-blue group-hover:scale-105 transition-transform flex-shrink-0">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[8px] text-gray-500 font-bold uppercase tracking-wider">
+                    {language === "th" ? "เบอร์ฝ่ายกงสุลปักกิ่ง (ภาษาไทย)" : language === "zh" ? "使馆领事办公室（泰语）" : "Consular Office Beijing (Thai Line)"}
+                  </span>
+                  <span className="font-bold text-gray-800 transition-colors">
+                    +86 (10) 8531-8767
+                  </span>
+                </div>
+              </a>
+
+              {/* General Embassy */}
+              <a
+                href="tel:+861085318700"
+                className="flex items-center gap-3 p-2.5 rounded-lg bg-brand-bg-primary/50 hover:bg-brand-bg-secondary/60 border border-white/10 hover:border-brand-blue transition-all duration-300 group"
+              >
+                <div className="p-2 rounded bg-brand-blue/5 text-brand-blue group-hover:scale-105 transition-transform flex-shrink-0">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[8px] text-gray-500 font-bold uppercase tracking-wider">
+                    {language === "th" ? "เบอร์หลักสถานทูตไทย ณ กรุงปักกิ่ง" : language === "zh" ? "泰国驻华大使馆总机" : "Royal Thai Embassy Main Tel"}
+                  </span>
+                  <span className="font-bold text-gray-800 transition-colors">
+                    +86 (10) 8531-8700
+                  </span>
+                </div>
+              </a>
+
+              {/* Bangkok MFA Hotline */}
+              <a
+                href="tel:+6625728442"
+                className="flex items-center gap-3 p-2.5 rounded-lg bg-brand-bg-primary/50 hover:bg-brand-bg-secondary/60 border border-white/10 hover:border-brand-blue transition-all duration-300 group"
+              >
+                <div className="p-2 rounded bg-brand-blue/5 text-brand-blue group-hover:scale-105 transition-transform flex-shrink-0">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[8px] text-gray-500 font-bold uppercase tracking-wider">
+                    {language === "th" ? "Call Center กรมการกงสุลไทย (24 ชม.)" : language === "zh" ? "泰国领事事务部呼叫中心" : "Consular Affairs Call Center BKK (24h)"}
+                  </span>
+                  <span className="font-bold text-gray-800 transition-colors">
+                    +66 (0) 2-572-8442
+                  </span>
+                </div>
+              </a>
             </div>
-
-            {/* Category tabs */}
-            <div className="flex justify-between bg-brand-bg-primary/65 p-1 rounded-lg border border-white/5 text-[9px] font-bold uppercase tracking-wider">
-              {Object.keys(translatorData).map((cat) => {
-                const isActive = activeCategory === cat;
-                const label = 
-                  cat === "survival" ? (language === "th" ? "ทั่วไป" : "Survival") :
-                  cat === "food" ? (language === "th" ? "อาหาร" : "Food") :
-                  cat === "directions" ? (language === "th" ? "นำทาง" : "Directions") :
-                  (language === "th" ? "ช้อปปิ้ง" : "Shopping");
-                return (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat as any)}
-                    className={`flex-1 py-1 rounded text-center transition-all duration-300 cursor-pointer ${
-                      isActive ? "bg-brand-gold text-brand-bg-primary font-extrabold" : "text-gray-400 hover:text-gray-200"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Phrase items list */}
-            <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1">
-              {filteredPhrases.length > 0 ? (
-                filteredPhrases.map((phrase, idx) => {
-                  const phraseId = `${activeCategory}-${idx}`;
-                  const isCopied = copiedTextId === phraseId;
-
-                  return (
-                    <div key={idx} className="p-3 rounded-lg bg-brand-bg-primary/50 border border-white/5 flex flex-col gap-1 text-[11px] relative group hover:border-brand-gold/20 transition-all duration-300">
-                      <div className="flex justify-between items-start">
-                        <span className="font-semibold text-gray-400">{phrase.th}</span>
-                        <div className="flex items-center gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
-                          {/* Speak Pronunciation Button */}
-                          <button
-                            onClick={() => speakPhrase(phrase.zh)}
-                            className="text-brand-gold hover:text-brand-gold-hover p-0.5 cursor-pointer"
-                            title="Speak Chinese"
-                          >
-                            <Volume2 className="w-3.5 h-3.5" />
-                          </button>
-                          {/* Copy Button */}
-                          <button
-                            onClick={() => copyPhrase(`${phrase.zh.split(" (")[0]} / ${phrase.uy}`, phraseId)}
-                            className="text-brand-blue hover:text-brand-blue-hover p-0.5 cursor-pointer"
-                            title="Copy phrase"
-                          >
-                            {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                          </button>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-0.5 mt-1 font-sans">
-                        <span className="text-gray-200 font-bold">CN: {phrase.zh}</span>
-                        <span className="text-brand-gold font-bold">UY: {phrase.uy}</span>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <p className="text-center text-xs text-gray-500 italic py-4">
-                  No phrases match your search.
-                </p>
-              )}
-            </div>
-            <span className="text-[8px] text-gray-500 italic text-center block mt-1">
-              UY = Uyghur language transliterated in Latin. Speaker icon uses browser speech synthesis for Chinese.
-            </span>
           </div>
+
         </div>
       </div>
     </div>

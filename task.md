@@ -1,0 +1,29 @@
+# Task List - UI & Layout Adjustments
+
+- [x] Move traveler status cards up to follow Group Chat in `LiveScreen.tsx`
+- [x] Delete the telemetry metrics card entirely in `LiveScreen.tsx`
+- [x] Exclude Nakared (Tob) from the radar markers in `MapScreen.tsx`
+- [x] Spread out middle flight column and center airplane icon in `FlightsScreen.tsx`
+- [x] Remove the word "ตรง" (Direct) from flight route card in `FlightsScreen.tsx`
+- [x] Change Transfer icon in Airport Guide modal to CircleDot in `FlightsScreen.tsx`
+- [x] Persist active tab in URL query parameter `?tab=xxx` in `page.tsx`
+- [x] Prevent auto-routing override on mount when URL query parameter is active in `page.tsx`
+- [x] Replace "Paid by" select dropdown with clickable traveler chips in `ExpenseSplitScreen.tsx`
+- [x] Highlight outstanding owes and negative net balance values in Red color in `ExpenseSplitScreen.tsx`
+- [x] Add client-side direct Supabase/local API polling fallback every 1.5s in `LiveScreen.tsx` to fix real-time group chat sync
+- [x] Fix traveler identity matching resolution to be case-insensitive and robust against suffixes in `LiveScreen.tsx`
+- [x] Always play audio beep notification on incoming messages from other travelers in `LiveScreen.tsx`
+- [x] Implement robust client-side write/upsert fallbacks to local API endpoints if Supabase writes fail in `LiveScreen.tsx`
+- [x] Implement full read-path sync fallbacks to local API endpoints if Supabase queries return errors in `LiveScreen.tsx`
+- [x] Support serverSupabase client configuration falling back to public anon key on deployed serverless environments in `serverSupabaseClient.ts`
+- [x] Update database schema file `schema.sql` to disable Row-Level Security (RLS) for public tables
+- [x] Remove "คัดลอกพิกัด" (Copy Coords) button and refactor "แชร์ตำแหน่ง" (Share Loc) to trigger modern Web Share API inside SOS bubble in `LiveScreen.tsx`
+- [x] Implement automatic GPS sharing initiation on mount in `LiveScreen.tsx` to force location active state
+- [x] Bypass safety PIN/Biometric verification popup on settlement confirmation in `ExpenseSplitScreen.tsx`
+- [x] Replace Payer (ผู้ชำระเงินคืน) select dropdown in settlement modal with traveler grid chips to eliminate "Done" key requirement on mobile devices
+- [x] Remove Floating AI Chatbot Assistant from `page.tsx`
+- [x] Remove "ช่วยเหลือ" / "Support" tab from `Sidebar.tsx`, `page.tsx` mobile drawer, and `OverviewScreen.tsx` quick access grid
+- [x] Delete `SupportScreen.tsx` orphan component file
+- [x] Fix chat bubble alignment layout: align user's messages to the right side and incoming messages to the left side using robust isMe comparison in `LiveScreen.tsx`
+- [x] Add long-press (กดค้าง) touch detection and context menu click handling to message bubbles to open action options smoothly on mobile devices and desktop in `LiveScreen.tsx`
+- [x] Verify typescript compilation builds successfully with no errors or warnings

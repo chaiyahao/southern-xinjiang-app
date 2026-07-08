@@ -4,12 +4,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTravelStore } from "../store/useTravelStore";
 import { TRANSLATIONS_DATA } from "../data/translations";
 import { ITINERARY_DATA } from "../data/travelData";
-import { MapPin, Navigation, Compass, AlertCircle, Eye, EyeOff } from "lucide-react";
+import { MapPin, Navigation, Compass, AlertCircle, Eye, EyeOff, Mountain } from "lucide-react";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 
 export default function MapScreen() {
-  const { activeDay, setActiveDay, language } = useTravelStore();
+  const { activeDay, setActiveDay, language, travelerLocations } = useTravelStore();
   const [showSatellite, setShowSatellite] = useState(false);
-  const [mapMode, setMapMode] = useState<"vector" | "3d_terrain">("vector");
+  const [mapMode, setMapMode] = useState<"vector" | "3d_terrain" | "real_map">("vector");
+
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+  const [zoom3D, setZoom3D] = useState(1);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [rotX, setRotX] = useState(0.5); // Rotation angles
@@ -176,7 +183,7 @@ export default function MapScreen() {
 
       const cx = canvas.width / 2;
       const cy = canvas.height / 2;
-      const scale = 220; // 3D Scale
+      const scale = 220 * zoom3D; // 3D Scale multiplied by zoom
       const fov = 3.0;   // Perspective depth
 
       const project3D = (pt: {x: number, y: number, z: number}) => {
@@ -294,6 +301,43 @@ export default function MapScreen() {
     };
   }, [mapMode, rotX, rotY, activeDay]);
 
+  const handleMapMouseDown = (e: React.MouseEvent) => {
+    setIsPanning(true);
+    setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+  };
+
+  const handleMapMouseMove = (e: React.MouseEvent) => {
+    if (!isPanning) return;
+    setPan({
+      x: e.clientX - panStart.x,
+      y: e.clientY - panStart.y
+    });
+  };
+
+  const handleMapMouseUp = () => {
+    setIsPanning(false);
+  };
+
+  const handleMapTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length !== 1) return;
+    setIsPanning(true);
+    const touch = e.touches[0];
+    setPanStart({ x: touch.clientX - pan.x, y: touch.clientY - pan.y });
+  };
+
+  const handleMapTouchMove = (e: React.TouchEvent) => {
+    if (!isPanning || e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    setPan({
+      x: touch.clientX - panStart.x,
+      y: touch.clientY - panStart.y
+    });
+  };
+
+  const handleMapTouchEnd = () => {
+    setIsPanning(false);
+  };
+
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     isDragging.current = true;
     prevMouse.current = { x: e.clientX, y: e.clientY };
@@ -315,6 +359,29 @@ export default function MapScreen() {
     isDragging.current = false;
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length !== 1) return;
+    isDragging.current = true;
+    const touch = e.touches[0];
+    prevMouse.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDragging.current || e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - prevMouse.current.x;
+    const deltaY = touch.clientY - prevMouse.current.y;
+    
+    setRotY((prev) => prev + deltaX * 0.007);
+    setRotX((prev) => Math.max(-Math.PI/3, Math.min(Math.PI/3, prev + deltaY * 0.007)));
+    
+    prevMouse.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchEnd = () => {
+    isDragging.current = false;
+  };
+
   return (
     <div className="flex flex-col gap-6 p-4 lg:p-8 animate-fadeIn max-w-7xl mx-auto w-full">
       {/* Header */}
@@ -323,7 +390,7 @@ export default function MapScreen() {
           <h2 className="text-2xl font-display font-extrabold text-gold-gradient tracking-tight">
             {t.map}
           </h2>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-500 font-medium">
             {language === "th"
               ? "แผนที่นำทางซินเจียงตอนใต้แบบโต้ตอบ 2 มิติ หรือผังความชัน 3 มิติ (3D Terrain)"
               : language === "zh"
@@ -333,13 +400,17 @@ export default function MapScreen() {
         </div>
         <div className="flex items-center gap-3">
           {/* Mode Switcher */}
-          <div className="flex bg-brand-bg-secondary p-0.5 rounded border border-white/5 text-[10px] font-bold uppercase tracking-wider">
+          <div className="flex bg-brand-bg-secondary p-0.5 rounded border border-gray-300 text-[10px] font-bold uppercase tracking-wider shadow-sm">
             <button
-              onClick={() => setMapMode("vector")}
+              onClick={() => {
+                setMapMode("vector");
+                setZoom(1);
+                setPan({ x: 0, y: 0 });
+              }}
               className={`px-3 py-1.5 rounded transition-all cursor-pointer ${
                 mapMode === "vector"
                   ? "bg-brand-gold text-brand-bg-primary font-extrabold"
-                  : "text-gray-400 hover:text-gray-200"
+                  : "text-gray-500 hover:text-gray-800"
               }`}
             >
               2D Route Map
@@ -349,17 +420,31 @@ export default function MapScreen() {
               className={`px-3 py-1.5 rounded transition-all cursor-pointer ${
                 mapMode === "3d_terrain"
                   ? "bg-brand-gold text-brand-bg-primary font-extrabold"
-                  : "text-gray-400 hover:text-gray-200"
+                  : "text-gray-500 hover:text-gray-800"
               }`}
             >
               3D Terrain View
+            </button>
+            <button
+              onClick={() => {
+                setMapMode("real_map");
+                setZoom(1);
+                setPan({ x: 0, y: 0 });
+              }}
+              className={`px-3 py-1.5 rounded transition-all cursor-pointer ${
+                mapMode === "real_map"
+                  ? "bg-brand-gold text-brand-bg-primary font-extrabold"
+                  : "text-gray-500 hover:text-gray-800"
+              }`}
+            >
+              Real Satellite Map
             </button>
           </div>
 
           {mapMode === "vector" && (
             <button
               onClick={() => setShowSatellite(!showSatellite)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-brand-bg-secondary border border-brand-gold/30 text-brand-gold text-xs font-semibold hover:bg-brand-gold hover:text-brand-bg-primary transition-all duration-300 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-brand-bg-secondary border border-brand-gold/30 text-brand-gold text-xs font-bold hover:bg-brand-gold hover:text-brand-bg-primary transition-all duration-300 cursor-pointer"
             >
               {showSatellite ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
               {showSatellite ? "Hide Terrain Grid" : "Show Terrain Grid"}
@@ -372,9 +457,74 @@ export default function MapScreen() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Map Canvas (Left) */}
         <div className="lg:col-span-8 flex flex-col gap-3">
-          <div className="glass-panel p-4 rounded-xl border border-white/5 bg-brand-bg-secondary/25 relative overflow-hidden flex flex-col gap-4">
+          <div className="glass-panel p-4 rounded-xl border border-white/10 bg-brand-bg-secondary/25 relative overflow-hidden flex flex-col gap-4">
             
-            {mapMode === "3d_terrain" ? (
+            {/* Floating Zoom Controls */}
+            <div className="absolute top-6 left-6 z-30 flex flex-col gap-1.5 shadow-md">
+              <button
+                onClick={() => {
+                  if (mapMode === "3d_terrain") setZoom3D((z) => Math.min(2.5, z + 0.15));
+                  else setZoom((z) => Math.min(4, z + 0.2));
+                }}
+                className="w-8 h-8 rounded-lg bg-slate-900/90 border border-brand-gold/30 hover:border-brand-gold text-brand-gold flex items-center justify-center font-bold text-lg cursor-pointer transition-all hover:scale-105"
+                title="Zoom In"
+              >
+                +
+              </button>
+              <button
+                onClick={() => {
+                  if (mapMode === "3d_terrain") setZoom3D((z) => Math.max(0.5, z - 0.15));
+                  else setZoom((z) => Math.max(0.8, z - 0.2));
+                }}
+                className="w-8 h-8 rounded-lg bg-slate-900/90 border border-brand-gold/30 hover:border-brand-gold text-brand-gold flex items-center justify-center font-bold text-lg cursor-pointer transition-all hover:scale-105"
+                title="Zoom Out"
+              >
+                -
+              </button>
+              <button
+                onClick={() => {
+                  if (mapMode === "3d_terrain") {
+                    setZoom3D(1);
+                    setRotX(0.5);
+                    setRotY(0.6);
+                  } else {
+                    setZoom(1);
+                    setPan({ x: 0, y: 0 });
+                  }
+                }}
+                className="w-8 h-8 rounded-lg bg-slate-900/90 border border-brand-gold/30 hover:border-brand-gold text-brand-gold flex items-center justify-center text-xs font-bold cursor-pointer transition-all hover:scale-105"
+                title="Reset View"
+              >
+                ⟲
+              </button>
+            </div>
+
+            {mapMode === "real_map" ? (
+              /* Real Satellite Map — Google Maps with full trip route highlighted */
+              <div className="w-full rounded-lg relative overflow-hidden border border-white/10 bg-slate-950 shadow-inner">
+                <iframe
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent("Kashgar to Tashkurgan to Hotan to Aksu, Xinjiang")}&z=6&output=embed`}
+                  className="w-full border-none"
+                  style={{ height: "440px" }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Southern Xinjiang Trip Route — Live Satellite"
+                  allowFullScreen
+                />
+                <div className="absolute top-3 left-3 bg-white/95 backdrop-blur border border-brand-gold/30 px-2.5 py-1 rounded text-[10px] text-gray-800 font-bold flex items-center gap-1.5">
+                  <MapPin className="w-3 h-3 text-brand-gold" />
+                  {language === "th" ? "แผนที่ดาวเทียมสด · เส้นทางทริปซินเจียงใต้" : language === "zh" ? "实时卫星图 · 南疆环线路线" : "Live Satellite · Southern Xinjiang Route"}
+                </div>
+                <a
+                  href="https://www.google.com/maps/dir/Kashgar/Tashkurgan/Hotan/Aksu/@38.5,79.0,6z"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute top-3 right-3 bg-brand-gold/95 text-white px-2.5 py-1 rounded text-[10px] font-bold hover:bg-brand-gold transition-colors flex items-center gap-1"
+                >
+                  {language === "th" ? "เปิดเส้นทาง ↗" : language === "zh" ? "打开路线 ↗" : "Open Route ↗"}
+                </a>
+              </div>
+            ) : mapMode === "3d_terrain" ? (
               /* 3D Terrain Interactive Canvas */
               <div className="w-full aspect-[3/2] rounded-lg relative overflow-hidden border border-white/10 bg-slate-950 shadow-inner flex items-center justify-center cursor-grab active:cursor-grabbing">
                 <canvas
@@ -385,6 +535,9 @@ export default function MapScreen() {
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
                   onMouseLeave={handleMouseUp}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
                   className="w-full h-full"
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 border border-brand-gold/30 px-3 py-1.5 rounded text-[10px] text-brand-gold font-bold">
@@ -394,11 +547,18 @@ export default function MapScreen() {
             ) : (
               /* 2D Vector/Satellite Map Area */
               <div
-                className={`w-full aspect-[3/2] rounded-lg relative overflow-hidden transition-all duration-500 border border-white/10 ${
+                className={`w-full aspect-[3/2] rounded-lg relative overflow-hidden transition-all duration-500 border border-white/10 cursor-grab active:cursor-grabbing ${
                   showSatellite
                     ? "bg-slate-950/90 shadow-inner"
                     : "bg-slate-900/60 shadow-inner"
                 }`}
+                onMouseDown={handleMapMouseDown}
+                onMouseMove={handleMapMouseMove}
+                onMouseUp={handleMapMouseUp}
+                onMouseLeave={handleMapMouseUp}
+                onTouchStart={handleMapTouchStart}
+                onTouchMove={handleMapTouchMove}
+                onTouchEnd={handleMapTouchEnd}
               >
                 {/* Satellite/Terrain Grid Effect */}
                 {showSatellite ? (
@@ -414,7 +574,16 @@ export default function MapScreen() {
                 </div>
 
                 {/* Vector SVG Route Map */}
-                <svg className="w-full h-full p-6 select-none" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+                <svg 
+                  className="w-full h-full p-6 select-none" 
+                  viewBox="0 0 600 400" 
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ 
+                    transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, 
+                    transformOrigin: "center", 
+                    transition: isPanning ? "none" : "transform 0.1s ease-out" 
+                  }}
+                >
                   {/* Defs for gradients & filters */}
                   <defs>
                     <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -543,18 +712,176 @@ export default function MapScreen() {
                       </g>
                     );
                   })}
+
+                  {/* Live traveler radar markers */}
+                  {Object.entries(travelerLocations)
+                    .filter(([id, loc]) => id !== "6" && id !== "5" && !loc.name.includes("NATTARIKA") && !loc.name.includes("NAKARED"))
+                    .map(([id, loc]) => {
+                    const { x, y } = project(loc.lng, loc.lat);
+                    const label = loc.name.split(" ")[0] || loc.name;
+
+                    return (
+                      <g key={id} className="pointer-events-none">
+                        <circle
+                          cx={x}
+                          cy={y}
+                          r="11"
+                          fill="none"
+                          stroke="#10B981"
+                          strokeWidth="1.5"
+                          opacity="0.55"
+                          className="animate-ping"
+                        />
+                        <circle
+                          cx={x}
+                          cy={y}
+                          r="4.5"
+                          fill="#10B981"
+                          stroke="#ECFDF5"
+                          strokeWidth="1.5"
+                          filter="url(#glow)"
+                        />
+                        <rect
+                          x={x + 7}
+                          y={y - 16}
+                          width={Math.max(38, label.length * 6 + 12)}
+                          height="14"
+                          rx="4"
+                          fill="#06281B"
+                          stroke="#10B981"
+                          strokeWidth="0.75"
+                          opacity="0.92"
+                        />
+                        <text
+                          x={x + 13}
+                          y={y - 6}
+                          fill="#D1FAE5"
+                          fontSize="8"
+                          fontWeight="bold"
+                          fontFamily="sans-serif"
+                        >
+                          {label}
+                        </text>
+                      </g>
+                    );
+                  })}
                 </svg>
               </div>
             )}
 
             {/* Map status info */}
-            <div className="flex items-center gap-2 text-xs text-gray-400 bg-brand-bg-primary/50 py-2 px-3 rounded border border-white/5">
+            <div className="flex items-center gap-2 text-xs text-gray-700 bg-brand-bg-primary/50 py-2 px-3 rounded border border-brand-gold/15">
               <AlertCircle className="w-4 h-4 text-brand-blue flex-shrink-0" />
               <span>
                 {language === "th"
                   ? "แผนที่แบบโต้ตอบ 3D Terrain เป็นระบบจำลองความต่างระดับความสูง (Altitude Profile) ลากนิ้ว/เมาส์เพื่อหมุนได้ 360 องศา"
                   : "To configure live Mapbox rendering, set your public token inside the environment configurations (`.env.local` as `NEXT_PUBLIC_MAPBOX_TOKEN`). The dashboard has reverted to vector flight routing."}
               </span>
+            </div>
+
+            {/* Elevation Profile AreaChart */}
+            <div className="glass-panel p-5 rounded-xl border border-brand-gold/15 bg-brand-bg-primary/10 flex flex-col gap-3 shadow mt-1">
+              <div className="flex items-center gap-2 border-b border-gray-900/10 pb-2">
+                <Mountain className="w-4 h-4 text-brand-gold" />
+                <h4 className="text-[10px] font-extrabold text-gray-900 uppercase tracking-wider">
+                  {language === "th" ? "แผนภูมิระดับความสูงภูมิประเทศ (Elevation Profile Chart)" : language === "zh" ? "路线地形海拔剖面图" : "Topographic Elevation Profile (Meters)"}
+                </h4>
+              </div>
+
+              <div className="w-full h-36 text-[10px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={[
+                      { day: 1, name: language === "th" ? "คัชการ์" : language === "zh" ? "喀什" : "Kashgar", alt: 1290 },
+                      { day: 2, name: language === "th" ? "ทะเลสาบไป๋ซา" : language === "zh" ? "白沙湖" : "Baisha Lk", alt: 3300 },
+                      { day: 2, name: language === "th" ? "คาราคูล" : language === "zh" ? "卡拉库里" : "Karakul Lk", alt: 3600 },
+                      { day: 3, name: language === "th" ? "ทัชเคอร์กัน" : language === "zh" ? "塔县" : "Tashkurgan", alt: 3090 },
+                      { day: 3, name: language === "th" ? "โค้งพานหลง" : language === "zh" ? "盘龙古道" : "Panlong Rd", alt: 4200 },
+                      { day: 4, name: language === "th" ? "มุซทัคอาตา" : language === "zh" ? "慕士塔格" : "Muztagh Peak", alt: 4300 },
+                      { day: 4, name: language === "th" ? "คัชการ์" : language === "zh" ? "喀什" : "Kashgar", alt: 1290 },
+                      { day: 5, name: language === "th" ? "เย่เฉิง" : language === "zh" ? "叶城" : "Yecheng", alt: 1370 },
+                      { day: 6, name: language === "th" ? "โฮตัน" : language === "zh" ? "和田" : "Hotan", alt: 1380 },
+                      { day: 7, name: language === "th" ? "ทางหลวงทราย" : language === "zh" ? "沙漠公路" : "Desert Hwy", alt: 1100 },
+                      { day: 7, name: language === "th" ? "อารัล" : language === "zh" ? "阿拉尔" : "Aral", alt: 1010 },
+                      { day: 8, name: language === "th" ? "ทอมูร์แคนยอน" : language === "zh" ? "大峡谷" : "Tomur Cyn", alt: 1600 },
+                      { day: 9, name: language === "th" ? "อักซู" : language === "zh" ? "阿克สุ" : "Aksu", alt: 1220 }
+                    ]}
+                    margin={{ top: 10, right: 5, left: -25, bottom: 0 }}
+                  >
+                    <defs>
+                      <linearGradient id="elevationGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#b5892c" stopOpacity={0.4} />
+                        <stop offset="95%" stopColor="#b5892c" stopOpacity={0.0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+                    <XAxis 
+                      dataKey="name" 
+                      stroke="#475569" 
+                      fontSize={8}
+                      tickLine={false}
+                    />
+                    <YAxis 
+                      stroke="#475569" 
+                      fontSize={8}
+                      domain={[500, 4800]}
+                      tickLine={false}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#ffffff",
+                        border: "1px solid rgba(181, 137, 44, 0.2)",
+                        borderRadius: "8px",
+                        color: "#1e293b",
+                        fontSize: "10px",
+                        padding: "5px 8px"
+                      }}
+                      formatter={(value: any) => [`${value} m`, "Altitude"]}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="alt" 
+                      stroke="#b5892c" 
+                      strokeWidth={2}
+                      fillOpacity={1} 
+                      fill="url(#elevationGrad)" 
+                    />
+                    {/* Active day reference line indicator */}
+                    {[
+                      { day: 1, name: language === "th" ? "คัชการ์" : language === "zh" ? "喀什" : "Kashgar" },
+                      { day: 2, name: language === "th" ? "คาราคูล" : language === "zh" ? "卡拉库里" : "Karakul Lk" },
+                      { day: 3, name: language === "th" ? "โค้งพานหลง" : language === "zh" ? "盘龙古道" : "Panlong Rd" },
+                      { day: 4, name: language === "th" ? "มุซทัคอาตา" : language === "zh" ? "慕士塔格" : "Muztagh Peak" },
+                      { day: 5, name: language === "th" ? "เย่เฉิง" : language === "zh" ? "叶城" : "Yecheng" },
+                      { day: 6, name: language === "th" ? "โฮตัน" : language === "zh" ? "和田" : "Hotan" },
+                      { day: 7, name: language === "th" ? "อารัล" : language === "zh" ? "阿拉尔" : "Aral" },
+                      { day: 8, name: language === "th" ? "ทอมูร์แคนยอน" : language === "zh" ? "大峡谷" : "Tomur Cyn" },
+                      { day: 9, name: language === "th" ? "อักซู" : language === "zh" ? "阿克苏" : "Aksu" },
+                      { day: 10, name: language === "th" ? "อักซู" : language === "zh" ? "阿克苏" : "Aksu" }
+                    ].map((pt, i) => {
+                      if (pt.day === activeDay) {
+                        return (
+                          <ReferenceLine
+                            key={i}
+                            x={pt.name}
+                            stroke="#0284c7"
+                            strokeDasharray="2 2"
+                            strokeWidth={1.5}
+                            label={{ 
+                              value: `${language === "th" ? "วันที่" : language === "zh" ? "第" : "Day"} ${activeDay}${language === "zh" ? "天" : ""}`, 
+                              position: "top", 
+                              fill: "#0284c7", 
+                              fontSize: 8, 
+                              fontWeight: "bold" 
+                            }}
+                          />
+                        );
+                      }
+                      return null;
+                    })}
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
         </div>
@@ -579,30 +906,32 @@ export default function MapScreen() {
                     className={`p-3 rounded-lg border cursor-pointer transition-all duration-300 flex flex-col gap-1.5 ${
                       isActive
                         ? "bg-brand-gold/10 border-brand-gold/30 text-brand-gold shadow-[0_0_10px_rgba(225,166,59,0.1)]"
-                        : "bg-brand-bg-secondary/20 border-white/5 hover:bg-white/5 hover:border-white/15"
+                        : "bg-brand-bg-secondary/60 border-gray-900/10 hover:bg-brand-bg-secondary/80 hover:border-gray-900/20"
                     }`}
                   >
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-brand-blue">
-                        Segment {idx + 1}
+                      <span className="text-[10px] uppercase font-extrabold tracking-wider text-brand-blue">
+                        {language === "th" ? "ช่วงเดินทางที่" : language === "zh" ? "路段" : "Segment"} {idx + 1}
                       </span>
-                      <span className="text-[9px] text-gray-500 font-light">Day {seg.day}</span>
+                      <span className="text-[9px] text-gray-600 font-extrabold">
+                        {language === "th" ? "วันที่" : language === "zh" ? "第" : "Day"} {seg.day}{language === "zh" ? "天" : ""}
+                      </span>
                     </div>
 
-                    <div className="text-xs font-bold text-gray-200">
+                    <div className="text-xs font-extrabold text-gray-900">
                       {getLocalizedPlace(seg.from)} → {getLocalizedPlace(seg.to)}
                     </div>
 
-                    <div className="text-[10px] text-gray-400 font-light italic">
+                    <div className="text-[10px] text-gray-700 font-medium italic">
                       {dayTrans.subtitle}
                     </div>
 
-                    <div className="flex justify-between items-center text-[10px] mt-1 pt-1.5 border-t border-white/5 text-gray-400">
-                      <span className="flex items-center gap-1">
+                    <div className="flex justify-between items-center text-[10px] mt-1 pt-1.5 border-t border-gray-900/10 text-gray-700">
+                      <span className="flex items-center gap-1 font-semibold">
                         <MapPin className="w-3 h-3 text-brand-gold" />
                         {seg.dist}
                       </span>
-                      <span className="font-semibold text-gray-300">
+                      <span className="font-bold text-gray-800">
                         ETA: ~{seg.time}
                       </span>
                     </div>

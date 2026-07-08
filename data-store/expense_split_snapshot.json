@@ -1,0 +1,91 @@
+{
+  "splitExpenses": [
+    {
+      "id": "08b05435-2fd7-495f-9b31-73a0fdaf8d29",
+      "name": "ค่าแท็กซี่",
+      "amountCny": 50,
+      "amountThb": 245.14999999999998,
+      "category": "transport",
+      "paidBy": "1",
+      "splitAmong": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "settledParticipants": [],
+      "createdAt": "2026-07-07T11:19:43.860Z",
+      "recordedBy": "CHAIYA WIBOONSANTISUK"
+    },
+    {
+      "id": "687d7569-d83b-48ed-a5dc-b29f50e07955",
+      "name": "ค่าอาหารมื้อที่ 2 วันที่ 1",
+      "amountCny": 80,
+      "amountThb": 392.23999999999995,
+      "category": "food",
+      "paidBy": "2",
+      "splitAmong": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "settledParticipants": [
+        "1"
+      ],
+      "createdAt": "2026-07-07T11:20:54.514Z",
+      "recordedBy": "NANUTDA PRAKHOD"
+    },
+    {
+      "id": "e03aef0d-2bb8-4ace-add1-32c73e331315",
+      "name": "ค่ารถจากสนามบินไปที่พัก",
+      "amountCny": 500,
+      "amountThb": 2451.5,
+      "category": "transport",
+      "paidBy": "4",
+      "splitAmong": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "settledParticipants": [
+        "1"
+      ],
+      "createdAt": "2026-07-07T11:21:23.185Z",
+      "recordedBy": "NAPAS PATTARAAMORNPAN"
+    },
+    {
+      "id": "b9afddee-10ab-4cf8-bd9a-07aab6196011",
+      "name": "ค่าอาหารมื้อที่ 3 วันที่ 1",
+      "amountCny": 80,
+      "amountThb": 392.23999999999995,
+      "category": "food",
+      "paidBy": "3",
+      "splitAmong": [
+        "2",
+        "5",
+        "6"
+      ],
+      "settledParticipants": [],
+      "createdAt": "2026-07-07T11:21:50.595Z",
+      "recordedBy": "TIPUBON HOMCHAN"
+    }
+  ],
+  "expenseLogs": [
+    "6:23:54 PM - CHAIYA เคลียร์ยอด ฿409 ให้ NAPAS (transfer)",
+    "6:23:29 PM - CHAIYA เคลียร์ยอด ฿65 ให้ NANUTDA (transfer)",
+    "6:21:50 PM - TIPUBON เพิ่มรายการ \"ค่าอาหารมื้อที่ 3 วันที่ 1\" ¥80 (฿392)",
+    "6:21:23 PM - NAPAS เพิ่มรายการ \"ค่ารถจากสนามบินไปที่พัก\" ¥500 (฿2,452)",
+    "6:20:54 PM - NANUTDA เพิ่มรายการ \"ค่าอาหารมื้อที่ 2 วันที่ 1\" ¥80 (฿392)",
+    "6:19:43 PM - CHAIYA เพิ่มรายการ \"ค่าแท็กซี่\" ¥50 (฿245)"
+  ],
+  "paymentRecords": [],
+  "updatedAt": "2026-07-07T13:50:07.044Z"
+}

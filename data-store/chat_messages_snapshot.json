@@ -1,0 +1,77 @@
+{
+  "messages": [
+    {
+      "id": "e559fb9f-eccf-4eea-9eee-3a25bd342844",
+      "sender": "SYSTEM",
+      "text": "[EXPENSE_LINK:2026-07-08T15:24:38.581Z] 💸 เคลียร์ยอดสำเร็จโดย Tarn: ยอดรวม ¥59.3 (฿291) ให้ Hao (transfer)",
+      "timestamp": "2026-07-08T15:24:39.540Z",
+      "readBy": [],
+      "deliveredTo": []
+    },
+    {
+      "id": "a8bbb4a1-02bd-4773-b5a7-18e625c4adb6",
+      "sender": "SYSTEM",
+      "text": "[EXPENSE_LINK:2026-07-08T15:25:37.732Z] 💸 เคลียร์ยอดสำเร็จโดย Tob: ยอดรวม ¥34.3 (฿168) ให้ Hao (transfer)",
+      "timestamp": "2026-07-08T15:25:38.149Z",
+      "readBy": [],
+      "deliveredTo": []
+    },
+    {
+      "id": "0efa0f9a-b11e-4439-9ac7-a5f96881f4fd",
+      "sender": "SYSTEM",
+      "text": "[EXPENSE_LINK:2026-07-08T15:27:02.202Z] 📢 บันทึกค่าใช้จ่ายใหม่โดย Hao: \"ทอสอบ 1\" ยอด ¥54 (฿265)",
+      "timestamp": "2026-07-08T15:27:02.619Z",
+      "readBy": [],
+      "deliveredTo": []
+    },
+    {
+      "id": "b27454d4-8885-4333-966e-f5270dd513c5",
+      "sender": "SYSTEM",
+      "text": "[EXPENSE_LINK:2026-07-08T15:46:43.805Z] 📢 บันทึกค่าใช้จ่ายใหม่โดย Hao: \"ทดสอบ 4\" ยอด ¥85 (฿417)",
+      "timestamp": "2026-07-08T15:46:44.232Z",
+      "readBy": [],
+      "deliveredTo": []
+    },
+    {
+      "id": "fce798a9-5cc5-410d-bcd9-80d405c1a783",
+      "sender": "SYSTEM",
+      "text": "[EXPENSE_LINK:2026-07-08T15:55:29.746Z] 💸 เคลียร์ยอดสำเร็จโดย Tarn: ยอดรวม ¥9 (฿44) ให้ Hao (transfer)",
+      "timestamp": "2026-07-08T15:55:30.181Z",
+      "readBy": [],
+      "deliveredTo": []
+    },
+    {
+      "id": "a6b817b4-06db-4dca-94a7-30cb8c62589c",
+      "sender": "SYSTEM",
+      "text": "[EXPENSE_LINK:2026-07-08T16:01:09.537Z] 📢 บันทึกค่าใช้จ่ายใหม่โดย Hao: \"ทดสอบ 5\" ยอด ¥58 (฿285)",
+      "timestamp": "2026-07-08T16:01:10.042Z",
+      "readBy": [],
+      "deliveredTo": []
+    },
+    {
+      "id": "9ec75b34-7aec-496c-a05d-45ef6d0e8c12",
+      "sender": "SYSTEM",
+      "text": "📢 ลบรายการค่าใช้จ่ายโดย Hao: \"ทดสอบ 5\" ยอด ¥58 (฿285) ถูกย้ายไปยังถังขยะ",
+      "timestamp": "2026-07-08T16:04:10.921Z",
+      "readBy": [],
+      "deliveredTo": []
+    },
+    {
+      "id": "7e47749b-4e43-46f7-869d-ede503f1da2f",
+      "sender": "SYSTEM",
+      "text": "📢 กู้คืนรายการค่าใช้จ่ายโดย Hao: \"ทดสอบ 5\" ยอด ¥58 (฿285) เข้าบัญชีกลาง",
+      "timestamp": "2026-07-08T16:04:22.365Z",
+      "readBy": [],
+      "deliveredTo": []
+    },
+    {
+      "id": "6ff527ec-af16-434b-8df2-74e99206c964",
+      "sender": "SYSTEM",
+      "text": "📢 ยกเลิกการเคลียร์ยอดโดย Hao: ยอด ¥9 (฿44) จาก Tarn ให้ Hao",
+      "timestamp": "2026-07-08T16:04:47.457Z",
+      "readBy": [],
+      "deliveredTo": []
+    }
+  ],
+  "deletedIds": []
+}

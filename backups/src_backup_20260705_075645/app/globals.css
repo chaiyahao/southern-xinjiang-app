@@ -1,0 +1,368 @@
+@import "tailwindcss";
+
+@theme {
+  /* === Primary: Premium Luxury Blue (replaces gold as dominant) === */
+  --color-brand-primary: #005cab;        /* Deep Royal Blue — new primary */
+  --color-brand-primary-hover: #004a8a;
+  --color-brand-secondary: #0048e1;      /* Vibrant accent blue */
+  --color-brand-navy: #0f294d;           /* DeepNavy for headings — replaces gray-900 */
+  --color-brand-navy-soft: #1a3a66;
+
+  /* === Gold: now a bright accent (was muddy #967223) === */
+  --color-brand-gold: #ffb700;           /* Brighter, more luxurious gold */
+  --color-brand-gold-deep: #c98a00;      /* For text on light (accessible) */
+  --color-brand-gold-hover: #e6a500;
+
+  /* Legacy aliases (keep so existing components don't break) */
+  --color-brand-bg-primary: #f9f9ff;     /* BackgroundBlue — soft, has dimension */
+  --color-brand-bg-secondary: #ffffff;
+  --color-brand-blue: #005cab;           /* Now points to the new primary blue */
+  --color-brand-blue-hover: #004a8a;
+
+  /* === Surface hierarchy (Material 3 style, 5 levels) === */
+  --color-surface-lowest: #ffffff;
+  --color-surface-low: #f0f3ff;
+  --color-surface-mid: #e8eeff;
+  --color-surface-high: #dfe8ff;
+  --color-surface-highest: #d6e3ff;
+
+  /* === Text === */
+  --color-text-muted: #687b94;
+
+  --color-glass-bg: rgba(255, 255, 255, 0.75);
+  --color-glass-border: rgba(0, 92, 171, 0.2);
+  --color-glass-border-blue: rgba(0, 92, 171, 0.25);
+  --color-glass-border-gold: rgba(255, 183, 0, 0.35);
+
+  --color-gray-50: #f9f9ff;
+  --color-gray-100: #f0f3ff;
+  --color-gray-200: #e8eeff;
+  --color-gray-300: #c0c7d6;
+  --color-gray-400: #687b94;
+  --color-gray-500: #475569;
+  --color-gray-600: #404753;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f294d;
+
+  --font-sans: var(--font-inter), var(--font-noto-thai), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-outfit), var(--font-noto-thai), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+:root {
+  --background: #f9f9ff;
+  --foreground: #0f294d;
+}
+
+html {
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+}
+
+.glass-panel-gold {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 183, 0, 0.35);
+  box-shadow: 0 8px 32px rgba(255, 183, 0, 0.08);
+}
+
+.glass-panel-blue {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 92, 171, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 92, 171, 0.08);
+}
+
+/* Luxury Gradient Text — primary is now deep navy/blue */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #0f294d 0%, #005cab 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-blue-gradient {
+  background: linear-gradient(135deg, #005cab 0%, #0048e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Accent gold text (for badges / highlights on dark backgrounds) */
+.text-gold-accent {
+  color: #ffb700;
+}
+
+/* Premium progress bar gradient */
+.bg-progress-gradient {
+  background: linear-gradient(90deg, #005cab 0%, #a5c8ff 100%);
+}
+
+/* Subtle navy heading helper */
+.text-navy {
+  color: #0f294d;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border: 1px solid rgba(15, 23, 42, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #005cab;
+}
+
+/* Animations */
+@keyframes pulse-gold {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.03);
+  }
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 3s infinite ease-in-out;
+}
+
+/* Route Path Visual styling for Map screen */
+.map-route-point {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Print and PDF Export Styling */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    font-size: 11pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Hide all screen components */
+  .no-print, 
+  header, 
+  button, 
+  nav, 
+  .sidebar, 
+  aside {
+    display: none !important;
+  }
+
+  /* Make sure the main content fills the print page */
+  main, .flex-1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-break-after {
+    page-break-after: always;
+  }
+  
+  .print-avoid-break {
+    page-break-inside: avoid;
+  }
+
+  /* RESET gradients and glowing borders for print! */
+  .print-only *,
+  .print-only td,
+  .print-only th,
+  .print-only p,
+  .print-only span,
+  .print-only div,
+  .print-only li,
+  .print-only a,
+  .print-only h1,
+  .print-only h2,
+  .print-only h3,
+  .print-only h4 {
+    color: #1e293b !important;
+    text-shadow: none !important;
+    background-image: none !important;
+    -webkit-text-fill-color: initial !important;
+    text-fill-color: initial !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    border-color: #cbd5e1 !important;
+  }
+
+  /* Heading Styles - Modern Premium look with Gold Accents */
+  .print-only h1 {
+    color: #b5892c !important;
+    font-size: 26pt !important;
+    font-weight: 800 !important;
+    border-bottom: 3px double #b5892c !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .print-only h2 {
+    color: #0f172a !important;
+    font-size: 16pt !important;
+    font-weight: 700 !important;
+    border-left: 4px solid #b5892c !important;
+    padding-left: 10px !important;
+    margin-top: 30px !important;
+    margin-bottom: 15px !important;
+  }
+
+  .print-only h3 {
+    color: #1e293b !important;
+    font-size: 12pt !important;
+    font-weight: 700 !important;
+    margin-bottom: 5px !important;
+  }
+
+  /* Tables in PDF Export */
+  .print-only table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .print-only th {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+    padding: 8px 6px !important;
+  }
+
+  .print-only td {
+    padding: 8px 6px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    color: #334155 !important;
+  }
+
+  /* Itinerary Days */
+  .print-only .print-avoid-break {
+    border: 1px solid #e2e8f0 !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    margin-bottom: 15px !important;
+    background-color: #f8fafc !important;
+  }
+
+  /* Bullet points style */
+  .print-only ul {
+    list-style-type: square !important;
+    padding-left: 20px !important;
+  }
+}
+
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+/* Custom Font Size Scaling Rules */
+.font-size-large p,
+.font-size-large li,
+.font-size-large td,
+.font-size-large th,
+.font-size-large textarea,
+.font-size-large input,
+.font-size-large select {
+  font-size: 1.085rem !important;
+  line-height: 1.625 !important;
+}
+.font-size-large .text-xs,
+.font-size-large .text-\[10px\],
+.font-size-large .text-\[11px\],
+.font-size-large .text-\[9px\] {
+  font-size: 13px !important;
+}
+.font-size-large .text-sm,
+.font-size-large .text-\[13px\] {
+  font-size: 15.5px !important;
+}
+.font-size-large .text-lg {
+  font-size: 1.2rem !important;
+}
+
+.font-size-xl p,
+.font-size-xl li,
+.font-size-xl td,
+.font-size-xl th,
+.font-size-xl textarea,
+.font-size-xl input,
+.font-size-xl select {
+  font-size: 1.2rem !important;
+  line-height: 1.675 !important;
+}
+.font-size-xl .text-xs,
+.font-size-xl .text-\[10px\],
+.font-size-xl .text-\[11px\],
+.font-size-xl .text-\[9px\] {
+  font-size: 14.5px !important;
+}
+.font-size-xl .text-sm,
+.font-size-xl .text-\[13px\] {
+  font-size: 17px !important;
+}
+.font-size-xl .text-lg {
+  font-size: 1.35rem !important;
+}
+
+/* Baseline Scaling for Thai Characters to increase readability */
+html[lang="th"] p,
+html[lang="th"] li,
+html[lang="th"] td,
+html[lang="th"] span:not(.font-size-btn),
+html[lang="th"] div {
+  font-size: 1.03em;
+  line-height: 1.55;
+}
+
