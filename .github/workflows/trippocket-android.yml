@@ -1,0 +1,41 @@
+name: TripPocket Android build
+on:
+  push:
+    branches:
+      - trippocket-android-v13
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Build APK
+        working-directory: trippocket-android
+        run: gradle --no-daemon :app:assembleDebug --stacktrace
+      - name: Export signing certificate fingerprint
+        shell: bash
+        run: |
+          mkdir -p trippocket-android/output
+          cp trippocket-android/app/build/outputs/apk/debug/*.apk trippocket-android/output/TripPocket-by-Arthur-v13.1.apk
+          keytool -list -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey > trippocket-android/output/signature-details.txt
+          sha256sum trippocket-android/output/TripPocket-by-Arthur-v13.1.apk > trippocket-android/output/sha256.txt
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: TripPocket-by-Arthur-v13.1-Android
+          path: trippocket-android/output/
+          retention-days: 30

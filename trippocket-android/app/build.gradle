@@ -1,0 +1,19 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.trippocket.byauthor'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.trippocket.byauthor'
+        minSdk 26
+        targetSdk 34
+        versionCode 13101
+        versionName '13.1.0'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+dependencies {
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
+}
